@@ -1,10 +1,19 @@
-import { Attendee } from 'src/attendees/entities/attendee.entity';
-import { Speaker } from '../entities/speaker.entity';
+import { IsNumber, IsPositive, IsString, MinLength } from 'class-validator';
 
 export class CreateTalkDto {
-  speaker: Speaker;
+  @IsString()
+  @MinLength(3)
+  speaker: string;
+
+  @IsString()
+  @MinLength(3)
   title: string;
+
+  @IsString()
+  @MinLength(3)
   abstract: string;
+
+  @IsNumber()
+  @IsPositive()
   room: number;
-  attendees: Attendee[];
 }
