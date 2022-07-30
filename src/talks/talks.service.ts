@@ -17,7 +17,6 @@ export class TalksService {
   constructor(
     @InjectRepository(Talk)
     private readonly talksRepository: Repository<Talk>,
-
     @InjectRepository(Speaker)
     private readonly speakerRepository: Repository<Speaker>,
   ) {}
@@ -41,11 +40,15 @@ export class TalksService {
   }
 
   findAll() {
-    return this.talksRepository.find({});
+    return this.talksRepository.find({ relations: ['speaker'] });
   }
 
   async findOne(id: string) {
-    const talk = await this.talksRepository.findOneBy({ key: id });
+    const queryBuilder = this.talksRepository.createQueryBuilder('talk');
+    const talk = await queryBuilder
+      .leftJoinAndSelect('talk.speaker', 'speaker')
+      .where('speaker.talkKey = :id', { id })
+      .getOne();
     if (!talk) throw new BadRequestException('Talk not found');
     return talk;
   }

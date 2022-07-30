@@ -1,4 +1,4 @@
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Talk } from './talk.entity';
 
 @Entity()
@@ -19,5 +19,6 @@ export class Speaker {
   bio: string;
 
   @OneToOne(() => Talk, (talk) => talk.speaker)
+  @JoinColumn()
   talk: Talk;
 }

@@ -5,7 +5,7 @@
 # Backend Verblio challenge
 ## Overwiew
 
-#### This project was made with NestJS and TypeScript, also Docker was used for hosting PostgresSQL database.
+#### This project was made with NestJS and TypeScript and typeORM, also Docker was used for hosting PostgresSQL database.
 
 ## Steps to run application
 
