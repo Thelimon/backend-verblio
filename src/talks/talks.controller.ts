@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  ParseUUIDPipe,
+} from '@nestjs/common';
 import { TalksService } from './talks.service';
 import { CreateTalkDto } from './dto/create-talk.dto';
 import { UpdateTalkDto } from './dto/update-talk.dto';
@@ -18,8 +27,8 @@ export class TalksController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.talksService.findOne(+id);
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
+    return this.talksService.findOne(id);
   }
 
   @Patch(':id')
@@ -28,7 +37,7 @@ export class TalksController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.talksService.remove(+id);
+  remove(@Param('id', ParseUUIDPipe) id: string) {
+    return this.talksService.remove(id);
   }
 }
