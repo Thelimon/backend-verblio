@@ -1,20 +1,23 @@
 import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Speaker } from './speaker.entity';
+import { Talk } from './talk.entity';
 
 @Entity()
-export class Talk {
+export class Speaker {
   @PrimaryGeneratedColumn('uuid')
   key: string;
 
   @Column('text', { unique: true })
-  title: string;
+  name: string;
 
   @Column('text', { unique: true })
-  abstract: string;
+  company: string;
 
   @Column('text', { unique: true })
-  room: number;
+  email: string;
 
-  @OneToOne(() => Speaker, (speaker) => speaker.talk, { cascade: true })
-  speaker: Speaker;
+  @Column('text', { unique: true })
+  bio: string;
+
+  @OneToOne(() => Talk, (talk) => talk.speaker)
+  talk: Talk;
 }

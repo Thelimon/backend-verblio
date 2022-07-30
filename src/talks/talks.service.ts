@@ -8,7 +8,7 @@ import { CreateTalkDto } from './dto/create-talk.dto';
 import { UpdateTalkDto } from './dto/update-talk.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Talk } from './entities/talk.entity';
+import { Speaker, Talk } from './entities';
 
 @Injectable()
 export class TalksService {
@@ -17,11 +17,21 @@ export class TalksService {
   constructor(
     @InjectRepository(Talk)
     private readonly talksRepository: Repository<Talk>,
+
+    @InjectRepository(Speaker)
+    private readonly speakerRepository: Repository<Speaker>,
   ) {}
 
   async create(createTalkDto: CreateTalkDto) {
     try {
-      const talk = await this.talksRepository.save(createTalkDto);
+      const speaker = await this.speakerRepository.create(
+        createTalkDto.speaker,
+      );
+      const talk = await this.talksRepository.create({
+        ...createTalkDto,
+        speaker,
+      });
+
       await this.talksRepository.save(talk);
 
       return talk;
