@@ -24,7 +24,7 @@ nest start --watch
 ````
 5. For get, post and delete requests use:
 ```bash
-localhost:3000/api/talk, attendee or speaker
+localhost:3000/api/talks, attendee or speaker
 ```
 6. For get a single talk use:
 ```bash
