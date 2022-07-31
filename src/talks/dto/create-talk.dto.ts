@@ -1,4 +1,5 @@
 import {
+  IsArray,
   IsNumber,
   IsObject,
   IsPositive,
@@ -6,6 +7,7 @@ import {
   MinLength,
 } from 'class-validator';
 import { Speaker } from '../entities';
+import { Attendee } from '../../attendees/entities/attendee.entity';
 
 export class CreateTalkDto {
   @IsString()
@@ -22,4 +24,7 @@ export class CreateTalkDto {
 
   @IsObject()
   speaker: Speaker;
+
+  @IsArray()
+  attendees: Attendee[];
 }

@@ -1,29 +1,33 @@
 import {
   Column,
   CreateDateColumn,
+  Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Talk } from '../../talks/entities';
 
+@Entity()
 export class Attendee {
   @PrimaryGeneratedColumn('uuid')
   key: string;
 
-  @Column('text', { unique: true })
+  @Column('text')
   name: string;
 
-  @Column('text', { unique: true })
+  @Column('text')
   company: string;
 
-  @Column('text', { unique: true })
+  @Column('text')
   email: string;
-
-  @Column('text', { unique: true })
-  registered: string;
 
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @ManyToOne(() => Talk, (talk) => talk.attendees)
+  talk: Talk;
 }

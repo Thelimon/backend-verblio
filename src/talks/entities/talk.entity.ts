@@ -2,11 +2,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Speaker } from './speaker.entity';
+import { Attendee } from '../../attendees/entities/attendee.entity';
 
 @Entity()
 export class Talk {
@@ -30,4 +32,7 @@ export class Talk {
 
   @OneToOne(() => Speaker, (speaker) => speaker.talk, { cascade: true })
   speaker: Speaker;
+
+  @OneToMany(() => Attendee, (attendee) => attendee.talk, { cascade: true })
+  attendees: Attendee[];
 }

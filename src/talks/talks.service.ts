@@ -9,6 +9,7 @@ import { UpdateTalkDto } from './dto/update-talk.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Speaker, Talk } from './entities';
+import { Attendee } from '../attendees/entities/attendee.entity';
 
 @Injectable()
 export class TalksService {
@@ -19,19 +20,26 @@ export class TalksService {
     private readonly talksRepository: Repository<Talk>,
     @InjectRepository(Speaker)
     private readonly speakerRepository: Repository<Speaker>,
+    @InjectRepository(Attendee)
+    private readonly attendeeRepository: Repository<Attendee>,
   ) {}
 
   async create(createTalkDto: CreateTalkDto) {
     try {
-      const speaker = await this.speakerRepository.create(
-        createTalkDto.speaker,
+      const speaker = this.speakerRepository.create(createTalkDto.speaker);
+
+      const attendees = createTalkDto.attendees.map((attendee) =>
+        this.attendeeRepository.create(attendee),
       );
+
       const talk = await this.talksRepository.create({
         ...createTalkDto,
         speaker,
+        attendees,
       });
 
       await this.talksRepository.save(talk);
+      await this.attendeeRepository.save(attendees);
 
       return talk;
     } catch (error) {
@@ -40,14 +48,16 @@ export class TalksService {
   }
 
   findAll() {
-    return this.talksRepository.find({ relations: ['speaker'] });
+    return this.talksRepository.find({ relations: ['speaker', 'attendees'] });
   }
 
   async findOne(id: string) {
     const queryBuilder = this.talksRepository.createQueryBuilder('talk');
     const talk = await queryBuilder
       .leftJoinAndSelect('talk.speaker', 'speaker')
+      .leftJoinAndSelect('talk.attendees', 'attendees')
       .where('speaker.talkKey = :id', { id })
+      .where('attendees.talkKey = :id', { id })
       .getOne();
     if (!talk) throw new BadRequestException('Talk not found');
     return talk;
